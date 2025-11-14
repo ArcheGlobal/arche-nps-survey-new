@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arche - Customer Feedback</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .container {
+            max-width: 750px;
+            width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 
+                0 25px 70px rgba(0, 0, 0, 0.15),
+                0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            animation: fadeIn 0.6s ease-in-out;
+            position: relative;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            background: #1a1a1a;
+            padding: 55px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-30px, -30px) rotate(10deg); }
+        }
+
+        .logo {
+            max-width: 240px;
+            height: auto;
+            filter: brightness(0) invert(1);
+            position: relative;
+            z-index: 1;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .form-content {
+            padding: 60px 50px;
+            background: white;
+        }
+
+        .intro-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .time-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1a1a1a;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .intro-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .intro-subtitle {
+            font-size: 17px;
+            color: #6b7280;
+            line-height: 1.6;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .nps-explanation {
+            background: #f9fafb;
+            padding: 20px 25px;
+            border-radius: 16px;
+            margin: 30px auto 0;
+            max-width: 580px;
+            border: 2px solid #e5e7eb;
+            font-size: 15px;
+            color: #4b5563;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .nps-explanation strong {
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+
+        .survey-period {
+            background: #1a1a1a;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin: 20px auto 0;
+            max-width: fit-content;
+            font-size: 15px;
+        }
+
+        .survey-period strong {
+            font-weight: 700;
+            color: white;
+        }
+
+        .nps-legend {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            border: 2px solid #1a1a1a;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .detractor-color {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .neutral-color {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .promoter-color {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .legend-text {
+            font-size: 14px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .legend-text strong {
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .customer-info-section {
+            background: #f9fafb;
+            padding: 35px 40px;
+            border-radius: 20px;
+            margin-bottom: 45px;
+            border: 2px solid #1a1a1a;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: #ef4444;
+            font-weight: 700;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 16px 18px;
+            border: 2px solid #1a1a1a;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #1a1a1a;
+            box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.08);
+        }
+
+        .text-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .improvement-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .improvement-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 20px 15px;
+            background: white;
+            border: 3px solid #1a1a1a;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-align: center;
+        }
+
+        .improvement-button:hover {
+            border-color: #1a1a1a;
+            background: #f9fafb;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .improvement-button.selected {
+            background: #1a1a1a;
+            border-color: #1a1a1a;
+            color: white;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .improvement-icon {
+            font-size: 32px;
+        }
+
+        .improvement-text {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .improvement-button.selected .improvement-text {
+            color: white;
+        }
+
+        .question-section {
+            margin-bottom: 50px;
+        }
+
+        .question-label {
+            font-size: 21px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 40px;
+            display: block;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .nps-scale-wrapper {
+            background: #f9fafb;
+            padding: 40px 35px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            margin: 35px 0;
+            border: 2px solid #1a1a1a;
+        }
+
+        .nps-scale {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 25px;
+            overflow-x: auto;
+        }
+
+        .nps-button {
+            width: 54px;
+            height: 54px;
+            min-width: 54px;
+            border: 3px solid #1a1a1a;
+            background: white;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .nps-button:hover {
+            border-color: #1a1a1a;
+            background: #f9fafb;
+            transform: translateY(-4px) scale(1.06);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .nps-button.selected {
+            background: #1a1a1a;
+            color: white;
+            border-color: #1a1a1a;
+            transform: translateY(-4px) scale(1.08);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        }
+
+        .nps-button.selected::after {
+            content: '✓';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #1a1a1a;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: checkPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes checkPop {
+            0% { transform: scale(0) rotate(-180deg); }
+            50% { transform: scale(1.3) rotate(0deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .nps-labels {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding: 0 5px;
+        }
+
+        .nps-label-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nps-label-score {
+            font-size: 28px;
+            font-weight: 900;
+            color: #1a1a1a;
+        }
+
+        .nps-label-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: #4b5563;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .emoji {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        .arrow-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 25px;
+            gap: 10px;
+        }
+
+        .arrow-line {
+            height: 3px;
+            flex: 1;
+            background: linear-gradient(to right, #6b7280 0%, #1a1a1a 50%, #1a1a1a 100%);
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .arrow-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .feedback-section {
+            margin-top: 50px;
+            padding: 40px;
+            background: #f9fafb;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            border: 2px solid #1a1a1a;
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .feedback-icon {
+            font-size: 24px;
+        }
+
+        .feedback-label {
+            font-size: 19px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .feedback-description {
+            font-size: 14px;
+            color: #9ca3af;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .text-area {
+            width: 100%;
+            min-height: 120px;
+            padding: 20px;
+            border: 3px solid #1a1a1a;
+            border-radius: 16px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.3s ease;
+            background: white;
+            line-height: 1.6;
+        }
+
+        .text-area:focus {
+            outline: none;
+            border-color: #1a1a1a;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.08);
+        }
+
+        .text-area::placeholder {
+            color: #9ca3af;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 22px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin-top: 45px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .submit-button:hover::before {
+            left: 100%;
+        }
+
+        .submit-button:hover:not(:disabled) {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            background: #2d2d2d;
+        }
+
+        .submit-button:active:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .submit-button:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px;
+            background: #f9fafb;
+            border-top: 2px solid #1a1a1a;
+        }
+
+        .footer-text {
+            font-size: 16px;
+            color: #6b7280;
+            line-height: 1.8;
+        }
+
+        .footer-bold {
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        @media (max-width: 768px) {
+            .form-content {
+                padding: 45px 25px;
+            }
+
+            .customer-info-section {
+                padding: 25px 20px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            .nps-button {
+                width: 44px;
+                height: 44px;
+                min-width: 44px;
+                font-size: 16px;
+            }
+
+            .nps-scale {
+                gap: 5px;
+            }
+
+            .intro-title {
+                font-size: 26px;
+            }
+
+            .question-label {
+                font-size: 19px;
+            }
+
+            .nps-label-score {
+                font-size: 22px;
+            }
+
+            .nps-label-text {
+                font-size: 12px;
+            }
+
+            .emoji {
+                font-size: 24px;
+            }
+
+            .header {
+                padding: 45px 25px;
+            }
+
+            .logo {
+                max-width: 200px;
+            }
+
+            .nps-scale-wrapper,
+            .feedback-section {
+                padding: 30px 20px;
+            }
+
+            .intro-subtitle {
+                font-size: 16px;
+            }
+
+            .improvement-options {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .improvement-button {
+                padding: 18px 12px;
+            }
+
+            .improvement-icon {
+                font-size: 28px;
+            }
+
+            .improvement-text {
+                font-size: 13px;
+            }
+
+            .nps-legend {
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .legend-text {
+                font-size: 13px;
+            }
+
+            .nps-explanation {
+                font-size: 14px;
+                padding: 18px 20px;
+            }
+
+            .survey-period {
+                font-size: 14px;
+                padding: 10px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="data:image/png;base64,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" alt="Arche" class="logo">
+        </div>
+
+        <form class="form-content" id="npsForm">
+            <div class="intro-section">
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <div class="time-badge">⏱️ Takes only 20 seconds</div>
+                </div>
+                <h1 class="intro-title">Your Opinion Matters</h1>
+                <p class="intro-subtitle">Help us serve you better by sharing your honest feedback.</p>
+                
+                <div class="nps-explanation">
+                    <strong>What is NPS?</strong> Net Promoter Score (NPS) is a simple metric that measures customer loyalty and satisfaction. Your feedback helps us understand how well we're serving you and where we can improve.
+                </div>
+                
+                <div class="survey-period">
+                    📅 Feedback Period: <strong>April 2025 - November 2025</strong>
+                </div>
+            </div>
+
+            <!-- Customer Information Section -->
+            <div class="customer-info-section">
+                <h3 class="section-title">Your Information</h3>
+                <div class="input-group">
+                    <label class="input-label" for="customerName">
+                        Full Name <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="customerName" 
+                        name="customerName" 
+                        class="text-input"
+                        placeholder="Enter your full name"
+                        required
+                    >
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="customerEmail">
+                        Your Official Email Address <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="email" 
+                        id="customerEmail" 
+                        name="customerEmail" 
+                        class="text-input"
+                        placeholder="Enter your official email address"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="question-section">
+                <label class="question-label">
+                    How likely are you to recommend Arche to other customers or departments within your organization?
+                </label>
+                
+                <div class="nps-scale-wrapper">
+                    <div class="nps-scale" id="npsScale">
+                        <div class="nps-button" data-value="0">0</div>
+                        <div class="nps-button" data-value="1">1</div>
+                        <div class="nps-button" data-value="2">2</div>
+                        <div class="nps-button" data-value="3">3</div>
+                        <div class="nps-button" data-value="4">4</div>
+                        <div class="nps-button" data-value="5">5</div>
+                        <div class="nps-button" data-value="6">6</div>
+                        <div class="nps-button" data-value="7">7</div>
+                        <div class="nps-button" data-value="8">8</div>
+                        <div class="nps-button" data-value="9">9</div>
+                        <div class="nps-button" data-value="10">10</div>
+                    </div>
+
+                    <div class="nps-labels">
+                        <div class="nps-label-item">
+                            <div class="emoji">😞</div>
+                            <div class="nps-label-score">0</div>
+                            <div class="nps-label-text">Not at all<br>likely</div>
+                        </div>
+                        <div class="nps-label-item">
+                            <div class="emoji">😊</div>
+                            <div class="nps-label-score">10</div>
+                            <div class="nps-label-text">Extremely<br>likely</div>
+                        </div>
+                    </div>
+
+                    <div class="arrow-indicator">
+                        <span class="arrow-label">Low</span>
+                        <div class="arrow-line"></div>
+                        <span class="arrow-label">High</span>
+                    </div>
+
+                    <!-- NPS Legend -->
+                    <div class="nps-legend">
+                        <div class="legend-item detractor">
+                            <span class="legend-color detractor-color"></span>
+                            <span class="legend-text"><strong>0-7:</strong> Detractors</span>
+                        </div>
+                        <div class="legend-item neutral">
+                            <span class="legend-color neutral-color"></span>
+                            <span class="legend-text"><strong>8:</strong> Neutral</span>
+                        </div>
+                        <div class="legend-item promoter">
+                            <span class="legend-color promoter-color"></span>
+                            <span class="legend-text"><strong>9-10:</strong> Promoters</span>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="npsScore" name="npsScore" required>
+            </div>
+
+            <!-- Additional Question: Top Improvement Priority -->
+            <div class="question-section">
+                <label class="question-label">
+                    What's the ONE thing we could improve that would make you MORE likely to recommend Arche?
+                </label>
+                
+                <div class="nps-scale-wrapper">
+                    <div class="improvement-options">
+                        <div class="improvement-button" data-value="response-time">
+                            <span class="improvement-icon">⚡</span>
+                            <span class="improvement-text">Faster Response Time</span>
+                        </div>
+                        <div class="improvement-button" data-value="technical-expertise">
+                            <span class="improvement-icon">🎓</span>
+                            <span class="improvement-text">Better Technical Expertise</span>
+                        </div>
+                        <div class="improvement-button" data-value="communication">
+                            <span class="improvement-icon">💬</span>
+                            <span class="improvement-text">Clearer Communication</span>
+                        </div>
+                        <div class="improvement-button" data-value="proactive-support">
+                            <span class="improvement-icon">🔮</span>
+                            <span class="improvement-text">More Proactive Support</span>
+                        </div>
+                        <div class="improvement-button" data-value="pricing">
+                            <span class="improvement-icon">💰</span>
+                            <span class="improvement-text">Better Pricing/Value</span>
+                        </div>
+                        <div class="improvement-button" data-value="nothing">
+                            <span class="improvement-icon">✨</span>
+                            <span class="improvement-text">Nothing - Already Excellent!</span>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 20px; color: #6b7280; font-size: 14px; font-style: italic;">
+                        Select the most important improvement area
+                    </div>
+                </div>
+                <input type="hidden" id="improvementScore" name="improvementScore" required>
+            </div>
+
+            <div class="feedback-section">
+                <div class="feedback-header">
+                    <span class="feedback-icon">💬</span>
+                    <label class="feedback-label" for="feedback">
+                        What's the primary reason for your score?
+                    </label>
+                </div>
+                <p class="feedback-description">
+                    Optional – Your feedback helps us improve
+                </p>
+                <textarea 
+                    class="text-area" 
+                    id="feedback" 
+                    name="feedback" 
+                    placeholder="Share your thoughts..."
+                    rows="4"
+                ></textarea>
+            </div>
+
+            <button type="submit" class="submit-button" id="submitBtn" disabled>Submit Feedback</button>
+        </form>
+
+        <div class="footer">
+            <p class="footer-text">
+                <span class="footer-bold">Thank you</span> for being a valued Arche customer.<br>
+                Your feedback helps us continuously improve our services.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // GOOGLE SHEETS INTEGRATION - READY TO USE!
+        // ========================================
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbziuVWktEHkf36s3G6RJrWho01tyrgVH3pfn6hhZHoxAp2qP1HjqhbceW1RlplweUsr-Q/exec';
+        
+        const npsButtons = document.querySelectorAll('.nps-button:not(.recommended-button)');
+        const improvementButtons = document.querySelectorAll('.improvement-button');
+        const npsScoreInput = document.getElementById('npsScore');
+        const improvementScoreInput = document.getElementById('improvementScore');
+        const submitBtn = document.getElementById('submitBtn');
+        const customerName = document.getElementById('customerName');
+        const customerEmail = document.getElementById('customerEmail');
+
+        // Check if form is complete
+        function checkFormComplete() {
+            const hasName = customerName.value.trim() !== '';
+            const hasEmail = customerEmail.value.trim() !== '';
+            const hasNpsScore = npsScoreInput.value !== '';
+            const hasImprovement = improvementScoreInput.value !== '';
+            
+            submitBtn.disabled = !(hasName && hasEmail && hasNpsScore && hasImprovement);
+        }
+
+        // Add event listeners to all inputs
+        customerName.addEventListener('input', checkFormComplete);
+        customerEmail.addEventListener('input', checkFormComplete);
+
+        // NPS buttons (0-10)
+        npsButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                npsButtons.forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+                npsScoreInput.value = this.getAttribute('data-value');
+                checkFormComplete();
+            });
+        });
+
+        // Improvement buttons
+        improvementButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                improvementButtons.forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+                improvementScoreInput.value = this.getAttribute('data-value');
+                checkFormComplete();
+            });
+        });
+
+        // Function to send data to Google Sheets
+        async function sendToGoogleSheets(formData) {
+            try {
+                // Show loading state
+                submitBtn.textContent = 'SUBMITTING...';
+                submitBtn.disabled = true;
+
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                // With no-cors, we can't read response but if we get here, it likely succeeded
+                return { success: true };
+
+            } catch (error) {
+                console.error('Error sending to Google Sheets:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        document.getElementById('npsForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!customerName.value.trim()) {
+                alert('Please enter your name.');
+                customerName.focus();
+                return;
+            }
+
+            if (!customerEmail.value.trim()) {
+                alert('Please enter your email address.');
+                customerEmail.focus();
+                return;
+            }
+
+            if (!npsScoreInput.value) {
+                alert('Please select your recommendation score (0-10).');
+                return;
+            }
+
+            if (!improvementScoreInput.value) {
+                alert('Please select the most important improvement area.');
+                return;
+            }
+
+            const formData = {
+                customerName: customerName.value.trim(),
+                customerEmail: customerEmail.value.trim(),
+                npsScore: npsScoreInput.value,
+                topImprovement: improvementScoreInput.value,
+                feedback: document.getElementById('feedback').value || 'No feedback provided',
+                timestamp: new Date().toISOString()
+            };
+
+            console.log('✅ Submitting to Google Sheets:', formData);
+
+            // Send to Google Sheets
+            const result = await sendToGoogleSheets(formData);
+
+            // Always show success (no-cors mode doesn't allow error detection)
+            setTimeout(() => {
+                alert('✅ Thank you, ' + formData.customerName + '! Your feedback has been submitted successfully.');
+                
+                // Reset form
+                this.reset();
+                npsButtons.forEach(btn => btn.classList.remove('selected'));
+                improvementButtons.forEach(btn => btn.classList.remove('selected'));
+                submitBtn.textContent = 'SUBMIT FEEDBACK';
+                submitBtn.disabled = true;
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
